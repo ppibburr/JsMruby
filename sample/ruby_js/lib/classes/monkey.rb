@@ -1,3 +1,11 @@
+class Hash
+  def each_pair &b
+    keys.each do |k|
+      b.call(k,self[k])
+    end
+  end
+end
+
 class Proc
   # used to turn Proc's into JsFunc's
   def to_js

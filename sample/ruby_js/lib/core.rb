@@ -14,10 +14,19 @@ module JS
   #
   # Modeled after XUI.js
   class Collection
+    attr_accessor :array
     # array, list of elements to set the collection to
     def initialize array
       @array = array
     end
+    
+    def to_xui
+      c = JS::Object.get("x$('bodyId')")
+      a = array.map do |q| q.to_js end
+      puts a
+      c.set a
+      c
+    end    
     
     # retrieves element at index i
     # i, Integer

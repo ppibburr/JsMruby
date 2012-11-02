@@ -1,7 +1,14 @@
-require "file_to_require.rb"
+
+  require "file_to_require.rb"
 
 JS::DOM.on_ready do
   begin
+    cnt = 0
+    Timer.new(1000,true) do |t|
+      t.repeat = false if cnt > 2
+      puts "ran timer"
+      cnt = cnt + 1
+    end.start
     puts "$OK is: #{$OK}"
     div = document.createElement("div")
     div.id = "sample"
@@ -97,6 +104,20 @@ def sample_dialog
 
 end
 
+def loop_bounce collection
+  collection.tween(:left=>'200px',:backgroundColor=>"#F80303",:top=>"200px",:duration=>750) do
+    collection.tween(:backgroundColor=>"#cecece",:top=>"0px",:duration=>750) do
+      collection.tween(:left=>'0px',:backgroundColor=>"#F80303",:top=>"200px",:duration=>750) do
+	collection.tween(:backgroundColor=>"blue",:top=>"0px",:duration=>750) do
+	  loop_bounce(collection)
+	end
+      end
+    end
+  end
+rescue => e
+  puts e.to_s
+end
+
 def sample_dom_xui
   clear_sample()
   
@@ -110,6 +131,7 @@ def sample_dom_xui
   parent.html("inner","<div id=sample_library>#{html}</div>")
  
   div = XUI.collect("#sample_library")
+  div.setStyle("position","relative")
 
   style = {
     :color=>"white", :backgroundColor=>"blue", :width=>305.px,
@@ -119,7 +141,9 @@ def sample_dom_xui
   style.each_key do |k|
     div.setStyle(k.to_s,style[k])
   end
-   
+
+  loop_bounce div  
+  
   div.click do |this,args|
     log_event(this,args)
   end
@@ -189,7 +213,7 @@ def sample_ruby_lib
   
   cnt = 0
   
-  for i in 0..2
+  for i in 0..5
     child = optimize ? JS::DOM::Element.wrap(optimize.cloneNode(true)) : (optimize = JS::DOM::Element.new("div",sample.element()))
 
     if cnt == 0
@@ -214,7 +238,7 @@ def sample_ruby_lib
 
   even.style.backgroundColor = "blue"
   odd.style.backgroundColor = "green"
-    
+  
   [:click, :mouseup, :mouseover].each do |e|  
     [even,odd].each_with_index do |col,i|
       col.on e.to_s do |this,args|
