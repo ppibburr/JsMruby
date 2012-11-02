@@ -21,7 +21,39 @@
 
 #include "mrb_js.h"
 #include "mrb_js_object.h"
+typedef struct RubyValue RubyValue;
+struct  RubyValue {
+  int type;
+  bool value_bool;
+  int value_int;
+  double value_float;
+  char* value_string;
+  int ary_size;
+  RubyValue *value_ary;
+};
 
+typedef struct {
+  NPObject* so;
+  RubyValue (*invoke)(char*);
+} RubyHandle;
+
+
+
+
+static NPObject        *so       = NULL;
+static NPNetscapeFuncs *npnfuncs = NULL;
+static NPP              inst     = NULL;
+RubyHandle      h;
+
+RubyHandle* ruby_npp_init(RubyValue (*invoke)(char*)) {
+    RubyHandle rh = {.so = so, .invoke = invoke};
+    h = rh;
+	return &h;
+};
+
+RubyHandle* ruby_handle_get_script_object(RubyHandle *rh) {
+	return rh->so;
+}
 
 KHASH_DECLARE(ht, mrb_value, mrb_value, 1);
 
@@ -302,8 +334,8 @@ bool convert_js_to_mrb_object(NPP npp, const NPVariant &variant, mrb_state *mrb,
     NPN_ReleaseVariantValue(&type_string);
     if (type == "[object Array]"){
         return convert_js_to_mrb_array(npp, variant, mrb, result);
-    }else if (type == "[object Object]"){
-        return convert_js_to_mrb_hash(npp, variant, mrb, result);
+    //}else if (type == "[object Object]"){
+    //    return convert_js_to_mrb_hash(npp, variant, mrb, result);
     }else if (type == "[object Function]"){
         return convert_js_to_mrb_function(npp, variant, mrb, result);
     }else{

@@ -19,6 +19,7 @@ struct MrbJsUd
 
 bool convert_js_to_mrb(NPP npp, const NPVariant &variant, mrb_state *mrb, mrb_value *result);
 bool convert_js_to_mrb_object(NPP npp, const NPVariant &variant, mrb_state *mrb, mrb_value *result);
+bool convert_js_to_mrb_hash(NPP npp, const NPVariant &variant, mrb_state *mrb, mrb_value *result);
 
 bool convert_mrb_to_js(mrb_state *mrb, mrb_value value, NPP npp, NPVariant *result);
 bool convert_mrb_to_js_array(mrb_state *mrb, mrb_value value, NPP npp, NPVariant *result);
