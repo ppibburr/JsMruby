@@ -2,7 +2,7 @@ TARGET = $(PLUGIN_NAME)
 OBJS = $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 CXX = g++
 LDSHARED = $(CXX) -shared
-LIBMRUBY = /home/ppibburr/git/mruby/lib/libmruby.a
+LIBMRUBY = ../../../mruby/lib/libmruby.a
 INC_DIRS = $(INCDIRS) ../include ../sdk
 CXXFLAGS = $(patsubst %,-I%,$(INC_DIRS))
 
